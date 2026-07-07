@@ -5,12 +5,14 @@ const getBaseUrl = () => {
     return `https://${codespaceName}-8000.app.github.dev`;
   }
 
-  return 'http://localhost:8000';
+  return '';
 };
 
 const buildApiUrl = (endpoint) => {
   const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-  return `${getBaseUrl()}${normalizedEndpoint}`;
+  const baseUrl = getBaseUrl();
+
+  return baseUrl ? `${baseUrl}${normalizedEndpoint}` : normalizedEndpoint;
 };
 
 const normalizeCollection = (payload) => {

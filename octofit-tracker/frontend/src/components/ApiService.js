@@ -8,24 +8,35 @@ const getBaseUrl = () => {
   return 'http://localhost:8000';
 };
 
+const buildApiUrl = (endpoint) => {
+  const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  return `${getBaseUrl()}${normalizedEndpoint}`;
+};
+
 const normalizeCollection = (payload) => {
   if (Array.isArray(payload)) {
     return payload;
   }
 
-  if (payload && Array.isArray(payload.results)) {
-    return payload.results;
-  }
+  if (payload && typeof payload === 'object') {
+    if (Array.isArray(payload.results)) {
+      return payload.results;
+    }
 
-  if (payload && Array.isArray(payload.items)) {
-    return payload.items;
+    if (Array.isArray(payload.items)) {
+      return payload.items;
+    }
+
+    if (Array.isArray(payload.data)) {
+      return payload.data;
+    }
   }
 
   return [];
 };
 
 const fetchJson = async (path) => {
-  const url = `${getBaseUrl()}${path}`;
+  const url = buildApiUrl(path);
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -36,4 +47,4 @@ const fetchJson = async (path) => {
   return normalizeCollection(payload);
 };
 
-export { fetchJson, getBaseUrl };
+export { buildApiUrl, fetchJson, getBaseUrl };

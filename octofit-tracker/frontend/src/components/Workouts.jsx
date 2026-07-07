@@ -5,7 +5,10 @@ function Workouts() {
   const [workouts, setWorkouts] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
-  const endpoint = '/api/workouts/';
+  const apiBaseUrl = import.meta.env.VITE_CODESPACE_NAME
+    ? 'https://' + import.meta.env.VITE_CODESPACE_NAME + '-8000.app.github.dev'
+    : 'http://localhost:8000';
+  const endpoint = '/api/workouts';
 
   useEffect(() => {
     let isActive = true;
@@ -13,7 +16,7 @@ function Workouts() {
 
     const loadWorkouts = async () => {
       try {
-        const response = await fetch(buildApiUrl(endpoint), { signal: controller.signal });
+        const response = await fetch(`${apiBaseUrl}${endpoint}`, { signal: controller.signal });
 
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`);
@@ -46,7 +49,7 @@ function Workouts() {
     };
   }, [endpoint]);
 
-  const apiUrl = buildApiUrl(endpoint);
+  const apiUrl = `${apiBaseUrl}${endpoint}`;
 
   return (
     <div className="card shadow-sm">
